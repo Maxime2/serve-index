@@ -257,7 +257,7 @@ describe('serveIndex(root)', function () {
 
   describe('with "hidden" option', function () {
     it('should filter hidden files by default', function (done) {
-      var server = createServer()
+      var server = createServer('test/fixtures')
 
       request(server)
       .get('/')
@@ -283,6 +283,23 @@ describe('serveIndex(root)', function () {
     });
   });
 
+  describe('with "protected" files', function () {
+	it('should return the file list', function (done) {
+	  fs.stat("test/fixtures/todo.txt", function (err, restore) {
+		if (err) throw err;
+		fs.chmod("test/fixtures/todo.txt", 0, function (err) {
+		  if (err) throw err;
+		  var server = createServer('test/fixtures');
+		  request(server)
+		  .get('/')
+		  .expect(200, /todo\.txt/, function () {
+			  fs.chmod("test/fixtures/todo.txt", restore.mode & 0x1FF, done);
+		  });
+		});
+	  });
+	});
+  });
+ 
   describe('with "filter" option', function () {
     it('should custom filter files', function (done) {
       var cb = after(2, done)
