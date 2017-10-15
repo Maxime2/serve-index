@@ -176,7 +176,7 @@ function serveIndex(root, options) {
       fs.readdir(path, function _readdir(err, files) {
         if (err) return next(err);
         if (!hidden) files = removeHidden(files);
-        if (filter) files = files.filter(function(filename, index, list) {
+        if (filter) files = files.filter(function (filename, index, list) {
           return filter(filename, index, list, path);
         });
 
@@ -585,7 +585,7 @@ function normalizeSlashes(path) {
  */
 
 function removeHidden(files) {
-  return files.filter(function(file){
+  return files.filter(function (file) {
     return file[0] !== '.'
   });
 }
@@ -608,6 +608,11 @@ function send(res, type, body) {
 }
 
 /**
+ * Array of fs.stat errors that apply to an entry, not the operation
+ */
+var EntryErrors = ['EACCES', 'EEXIST', 'ENOENT', 'ENXIO', 'EPERM', 'EROFS'];
+
+/**
  * Stat all files and return array of stat
  * in same order.
  */
@@ -617,21 +622,21 @@ function fstat(dir, files, cb) {
 
   batch.concurrency(10);
 
-  files.forEach(function(file){
-    batch.push(function(done){
-      fs.stat(join(dir, file), function(err, stat){
+  files.forEach(function (file) {
+    batch.push(function (done) {
+      fs.stat(join(dir, file), function (err, stat) {
         // communicate errors via fake stat
-        if (err && err.code !== 'ENOENT') {
-          stat = {
-            size: 0,
-            mtime: new Date(0),
-            error: err.toString(),
-            code: err.code,
-            isDirectory: function () { return false }
-          }
+        if (err && EntryErrors.indexOf(err.code) === -1) return done(err);
+
+        stat = {
+          size: 0,
+          mtime: new Date(0),
+          error: err.toString(),
+          code: err.code,
+          isDirectory: function () { return false }
         }
 
-        // pass ENOENT as null stat, not error
+        // pass EntryErrors as null stat, not error
         done(null, stat || null);
       });
     });
