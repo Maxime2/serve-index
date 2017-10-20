@@ -610,7 +610,7 @@ function send(res, type, body) {
 /**
  * Array of fs.stat errors that apply to an entry, not the operation
  */
-var EntryErrors = ['EACCES', 'EEXIST', 'ENOENT', 'ENXIO', 'EPERM', 'EROFS'];
+var EntryErrors = ['EACCES', 'EBUSY', 'EEXIST', 'ENOENT', 'ENXIO', 'EPERM', 'EROFS'];
 
 /**
  * Stat all files and return array of stat
