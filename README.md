@@ -89,6 +89,10 @@ provided locals:
 
 Display mode. `tiles` and `details` are available. Defaults to `tiles`.
 
+##### sort
+
+Filelist sorting function. Add an array.sort function. Defaults to sorting by filename.
+
 ## Examples
 
 ### Serve directory indexes with vanilla node.js http server
