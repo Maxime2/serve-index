@@ -14,7 +14,7 @@
  */
 
 var accepts = require('accepts');
-var bytes = require('bytes');
+var prettyBytes = require('@gerhobbelt/pretty-bytes');
 var createError = require('http-errors');
 var debug = require('debug')('serve-index');
 var escapeHtml = require('escape-html');
@@ -356,7 +356,7 @@ function createFileList(files, dirname, options) {
       : '';
     // human readable
     var size = file.size && !isDir
-      ? bytes.format(file.size, { decimalPlaces: 0 })
+      ? prettyBytes(file.size)
       : '';
 
     return options.templates.item
