@@ -356,16 +356,16 @@ function createFileList(files, dirname, options) {
     var date = file.lastModified && file.name !== '..'
       ? file.lastModified.toLocaleDateString() + ' ' + file.lastModified.toLocaleTimeString()
       : '';
+    // human readable
     var size = file.size && !isDir
-      ? file.size
+      ? bytes.format(file.size, { decimalPlaces: 0 })
       : '';
 
     return options.templates.item
       .replace(/{path}/g, escape(normalizeSlashes(normalize(path.join('/')))))
       .replace(/{classes}/g, escape(classes.join(' ')))
       .replace(/{file\.name}/g, escape(file.name))
-      // human readable
-      .replace(/{file\.size}/g, escape(bytes.format(size, { decimalPlaces: 0 })))
+      .replace(/{file\.size}/g, escape(size))
       .replace(/{file\.lastModified/g, escape(date))
   }).join('\n');
 
