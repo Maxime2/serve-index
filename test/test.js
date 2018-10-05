@@ -48,7 +48,7 @@ describe('serveIndex(root)', function () {
 
     request(server)
     .head('/')
-    .expect(200, '', done)
+    .expect(200, undefined, done)
   })
 
   it('should work with OPTIONS requests', function (done) {
@@ -365,15 +365,15 @@ describe('serveIndex(root)', function () {
         var body = res.text.split('</h1>')[1];
         var urls = body.split(/<a href="([^"]*)"/).filter(function(s, i){ return i%2; });
         assert.deepEqual(urls, [
-          '/%E3%81%95%E3%81%8F%E3%82%89.txt',
           '/users',
+          '/g%23%20%253%20o%20%26%20%252525%20%2537%20dir',
+          '/collect',
+          '/%23directory',
+          '/%E3%81%95%E3%81%8F%E3%82%89.txt',
           '/todo.txt',
           '/nums',
-          '/g%23%20%253%20o%20%26%20%252525%20%2537%20dir',
           '/foo%20%26%20bar',
           '/file%20%231.txt',
-          '/collect',
-          '/%23directory'
         ]);
         done();
       });

@@ -291,8 +291,7 @@ serveIndex.html = function _html(req, res, directory, files, next, options) {
  * Respond with application/json.
  */
 
-serveIndex.json = function _json(req, res, directory, nodes) {
-  var files = nodes.map(function (file) { return file })
+serveIndex.json = function _json(req, res, directory, files, next, options) {
   send(res, 'application/json', JSON.stringify(files))
 }
 
@@ -300,12 +299,12 @@ serveIndex.json = function _json(req, res, directory, nodes) {
  * Respond with text/plain.
  */
 
-serveIndex.plain = function _plain(req, res, directory, nodes, next, options) {
+serveIndex.plain = function _plain(req, res, directory, files, next, options) {
   // create locals for rendering
   var locals = {
     directory: directory.name,
     displayIcons: Boolean(icons),
-    fileList: nodes,
+    fileList: files,
     path: options.path,
     templates: options.templates.plain,
     viewName: options.view,
