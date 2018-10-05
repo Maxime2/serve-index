@@ -119,7 +119,7 @@ function serveIndex(root, options) {
   var stylesheet = opts.stylesheet || defaultStylesheet;
   var template = opts.template || defaultTemplate;
   var view = opts.view || 'tiles';
-  var sort = opts.sort || fileSort;
+  var sort = mkFileSort(opts.sort);
   return function _serveIndex(req, res, next) {
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       res.statusCode = 'OPTIONS' === req.method ? 200 : 405;
@@ -406,18 +406,27 @@ function renderTemplate(str, locals) {
 }
 
 /**
- * Sort function for with directories first.
+ * Generate the appropriate sort function, where parent directories always end up top and
+ * directories always end up before files.
  */
 
-function fileSort(a, b) {
-  // sort ".." to the top
-  if (a.name === '..' || b.name === '..') {
-    return a.name === b.name ? 0
-      : a.name === '..' ? -1 : 1;
+function mkFileSort(f) {
+  if (!f) {
+    f = function _defaultNameSort(a, b) {
+      return String(a.name).toLocaleLowerCase().localeCompare(String(b.name).toLocaleLowerCase());
+    };
   }
 
-  return Number(b.stat && b.stat.isDirectory()) - Number(a.stat && a.stat.isDirectory()) ||
-    String(a.name).toLocaleLowerCase().localeCompare(String(b.name).toLocaleLowerCase());
+  return function _fileSort(a, b) {
+    // sort ".." to the top
+    if (a.name === '..' || b.name === '..') {
+      return a.name === b.name ? 0
+        : a.name === '..' ? -1 : 1;
+    }
+
+    return Number(b.stat && b.stat.isDirectory()) - Number(a.stat && a.stat.isDirectory()) ||
+      f(a, b);
+  };
 }
 
 /**
