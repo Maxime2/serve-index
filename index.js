@@ -14,6 +14,7 @@
  */
 
 var accepts = require('accepts');
+var bytes = require('bytes');
 var createError = require('http-errors');
 var debug = require('debug')('serve-index');
 var escapeHtml = require('escape-html');
@@ -363,7 +364,8 @@ function createFileList(files, dirname, options) {
       .replace(/{path}/g, escape(normalizeSlashes(normalize(path.join('/')))))
       .replace(/{classes}/g, escape(classes.join(' ')))
       .replace(/{file\.name}/g, escape(file.name))
-      .replace(/{file\.size}/g, escape(size))
+      // human readable
+      .replace(/{file\.size}/g, escape(bytes.format(size, { decimalPlaces: 0 })))
       .replace(/{file\.lastModified/g, escape(date))
   }).join('\n');
 
