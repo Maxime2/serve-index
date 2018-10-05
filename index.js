@@ -626,14 +626,16 @@ function fstat(dir, files, cb) {
     batch.push(function (done) {
       fs.stat(join(dir, file), function (err, stat) {
         // communicate errors via fake stat
-        if (err && EntryErrors.indexOf(err.code) === -1) return done(err);
+        if (err) {
+          if (EntryErrors.indexOf(err.code) === -1) return done(err);
 
-        stat = {
-          size: 0,
-          mtime: new Date(0),
-          error: err.toString(),
-          code: err.code,
-          isDirectory: function () { return false }
+          stat = {
+            size: 0,
+            mtime: new Date(0),
+            error: err.toString(),
+            code: err.code,
+            isDirectory: function () { return false }
+          }
         }
 
         // pass EntryErrors as null stat, not error
