@@ -119,8 +119,8 @@ function serveIndex(root, options) {
   var stylesheet = opts.stylesheet || defaultStylesheet;
   var template = opts.template || defaultTemplate;
   var view = opts.view || 'tiles';
-
-  return function (req, res, next) {
+  var sort = opts.sort || fileSort;
+  return function _serveIndex(req, res, next) {
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       res.statusCode = 'OPTIONS' === req.method ? 200 : 405;
       res.setHeader('Allow', 'GET, HEAD, OPTIONS');
@@ -157,7 +157,7 @@ function serveIndex(root, options) {
 
     // check if we have a directory
     debug('stat "%s"', path);
-    fs.stat(path, function(err, stat){
+    fs.stat(path, function _stat(err, stat) {
       if (err && err.code === 'ENOENT') {
         return next();
       }
@@ -173,13 +173,12 @@ function serveIndex(root, options) {
 
       // fetch files
       debug('readdir "%s"', path);
-      fs.readdir(path, function(err, files){
+      fs.readdir(path, function _readdir(err, files) {
         if (err) return next(err);
         if (!hidden) files = removeHidden(files);
         if (filter) files = files.filter(function(filename, index, list) {
           return filter(filename, index, list, path);
         });
-        files.sort();
 
         // add parent directory as first
         if (showUp) {
@@ -204,7 +203,7 @@ function serveIndex(root, options) {
           }).filter(function (file) { return file.stat });
 
           // sort file list
-          fileList.sort(fileSort);
+          fileList.sort(sort);
 
           // make similar to file object (with stat)
           var directory = {
@@ -239,7 +238,7 @@ function serveIndex(root, options) {
             // string templates
             templates: templates,
             // path to stylesheet
-            stylesheet: stylesheet
+            stylesheet: stylesheet,
           })
         });
       });
@@ -276,7 +275,7 @@ serveIndex.html = function _html(req, res, directory, files, next, options) {
       path: path,
       style: style,
       templates: options.templates.html,
-      viewName: view
+      viewName: view,
     };
     locals.style = locals.style.concat(iconStyle(locals.fileList, locals.displayIcons))
 
@@ -302,7 +301,6 @@ serveIndex.json = function _json(req, res, directory, nodes) {
  */
 
 serveIndex.plain = function _plain(req, res, directory, nodes, next, options) {
-
   // create locals for rendering
   var locals = {
     directory: directory.name,
@@ -310,7 +308,7 @@ serveIndex.plain = function _plain(req, res, directory, nodes, next, options) {
     fileList: nodes,
     path: options.path,
     templates: options.templates.plain,
-    viewName: options.view
+    viewName: options.view,
   };
 
   send(res, 'text/plain', renderTemplate(locals.templates.page, locals))
@@ -401,7 +399,7 @@ function renderTemplate(str, locals) {
       displayIcons: locals.displayIcons,
       escape: escape,
       templates: locals.templates,
-      viewName: locals.viewName
+      viewName: locals.viewName,
     }))
     .replace(/{directory}/g, escape(locals.directory))
     .replace(/{linked-path}/g, htmlPath(locals.directory))
