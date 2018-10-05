@@ -76,6 +76,14 @@ describe('serveIndex(root)', function () {
     .expect(400, done)
   })
 
+  it('should treat badly encoded URI as a 400', function (done) {
+    var server = createServer()
+
+    request(server)
+    .head('/%E4')
+    .expect(400, done)
+  })
+
   it('should deny path outside root', function (done) {
     var server = createServer()
 

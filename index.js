@@ -110,8 +110,13 @@ function serveIndex(root, options) {
     // parse URLs
     var url = parseUrl(req);
     var originalUrl = parseUrl.original(req);
-    var dir = decodeURIComponent(url.pathname);
-    var originalDir = decodeURIComponent(originalUrl.pathname);
+
+    try {
+      var dir = decodeURIComponent(url.pathname);
+      var originalDir = decodeURIComponent(originalUrl.pathname);
+    } catch (e) {
+      return next(createError(400));
+    }
 
     // join / normalize from root dir
     var path = normalize(join(rootPath, dir));
