@@ -1,7 +1,7 @@
 {
   "name": "@gerhobbelt/serve-index",
   "description": "Serve directory listings",
-  "version": "1.9.2-1",
+  "version": "1.9.2-2",
   "author": "Douglas Christopher Wilson <doug@somethingdoug.com>",
   "license": "MIT",
   "repository": "expressjs/serve-index",
@@ -37,6 +37,7 @@
     "fix": "eslint --fix --plugin markdown --ext js,md .",
     "test": "mocha --reporter spec --bail --check-leaks test/",
     "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/"
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+    "pub": "npm publish --access public"
   }
 }
