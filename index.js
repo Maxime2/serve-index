@@ -588,7 +588,7 @@ function removeHidden(files) {
  * @private
  */
 
-function send (res, type, body) {
+function send(res, type, body) {
   // security header for content sniffing
   res.setHeader('X-Content-Type-Options', 'nosniff')
 
