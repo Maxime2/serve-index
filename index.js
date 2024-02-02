@@ -365,7 +365,7 @@ function createFileList(files, dirname, options) {
       .replace(/{classes}/g, escape(classes.join(' ')))
       .replace(/{file\.name}/g, escape(file.name))
       .replace(/{file\.size}/g, escape(size))
-      .replace(/{file\.lastModified/g, escape(date))
+      .replace(/{file\.lastModified}/g, escape(date))
   }).join('\n');
 
   return html.replace(/{items}/g, items)
