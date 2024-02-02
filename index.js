@@ -47,7 +47,7 @@ var cache = {};
  */
 
 var defaultTemplate = join(__dirname, 'public', 'directory.html');
-var templates = {
+var defaultTemplates = {
   plain: {
     page: '{files}\n',
     list: '{header}{items}',
@@ -118,6 +118,7 @@ function serveIndex(root, options) {
   var icons = opts.icons;
   var stylesheet = opts.stylesheet || defaultStylesheet;
   var template = opts.template || defaultTemplate;
+  var templates = opts.templates || defaultTemplates;
   var view = opts.view || 'tiles';
   var sort = mkFileSort(opts.sort);
   return function _serveIndex(req, res, next) {
