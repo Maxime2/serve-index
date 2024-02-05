@@ -103,6 +103,36 @@ provided locals:
   * `style` is the default stylesheet or the contents of the `stylesheet` option.
   * `viewName` is the view name provided by the `view` option.
 
+##### templates
+
+Optional object defining templates to be used to construct `{files}` token for
+the template above. Defaults to a built-in object shown below.
+Available renders: `plain`, 'html`, 'json`.
+
+```js
+var defaultTemplates = {
+  plain: {
+    page: '{files}\n',
+    list: '{header}{items}',
+    header: '',
+    item: '{file.name}\n'
+  },
+  html: {
+    list: '<ul id="files" class="view-{view}">{header}{items}</ul>',
+    header: '<li class="header">'
+      + '<span class="name">Name</span>'
+      + '<span class="size">Size</span>'
+      + '<span class="date">Modified</span>'
+      + '</li>',
+    item: '<li><a href="{path}" class="{classes}" title="{file.name}">'
+      + '<span class="name">{file.name}</span>'
+      + '<span class="size">{file.size}</span>'
+      + '<span class="date">{file.lastModified}</span>'
+      + '</a></li>'
+  }
+}
+```
+
 ##### view
 
 Display mode. `tiles` and `details` are available. Defaults to `tiles`.
